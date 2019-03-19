@@ -17,6 +17,7 @@ const connectionUrl = `mongodb://${credentials.server}:${credentials.port}/${cre
 const connectionOptions = {
     useNewUrlParser: true,
     autoReconnect: true,
+    useFindAndModify: false,
     reconnectTries: Number.MAX_VALUE,
     reconnectInterval: 500,
     auth: {

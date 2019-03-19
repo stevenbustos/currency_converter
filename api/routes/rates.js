@@ -1,24 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const RateModel = require('../models/rates');
+const RateController = require('../controllers/rate_controller');
 
-// Create the rates
-router.post('/rates', (req, res) => {
-    
-    if(!req.body) {
-        return res.status(400).send('Request body is missing');
-    }
+// CRUD functions for the rates model
 
-    let model = new RateModel(req.body);
-    model.save().then(doc => {
-        if(!doc || doc.length === 0) {
-            return res.status(500).send(doc);
-        }
-        res.status(201).send(doc);
-    }).catch(err => {
-        res.status(500).json(err);
-    });
-});
+// Create
+router.post('/rates', RateController.rate_create);
 
+// Read
+router.get('/rates', RateController.rate_read);
+
+// Read by ID
+router.get('/rates/:id', RateController.rate_read_id);
+
+// Update by ID
+router.put('/rates/:id', RateController.rate_update);
+
+// Delete by ID
+router.delete('/rates/:id', RateController.rate_delete);
 
 module.exports = router;

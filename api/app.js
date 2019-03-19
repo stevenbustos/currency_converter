@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 // Fixer.io rates
 const fixer = require('./helpers/fixerRates');
 //fixer.getRates;
-setInterval(fixer.getRates, 1000 * 60 * parseFloat(process.env.TIME_REQUEST));
+setInterval(fixer.getRates, 1000 * parseFloat(process.env.TIME_REQUEST));
 
 // Port of the API
 const PORT = process.env.API_PORT || 10000;
