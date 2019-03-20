@@ -43,10 +43,20 @@ convert = async function (req, res) {
         // we need to convert from EUR to to_currency
         if (to === 'EUR') {
             result = in_eur;
-            res.status(200).send(`The amount ${amount} from ${from} to ${to} is: ${Math.ceil(result)}`);
+            res.status(200).send({
+                msg: `The amount ${amount} from ${from} to ${to} is: ${Math.ceil(result)}`,
+                data: {
+                    result: Math.ceil(result)
+                }
+            });
         } else {
             result = (in_eur * latest.rates[to]);
-            res.status(200).send(`The amount ${amount} from ${from} to ${to} is: ${Math.ceil(result)}`);
+            res.status(200).send({
+                msg: `The amount ${amount} from ${from} to ${to} is: ${Math.ceil(result)}`,
+                data: {
+                    result: Math.ceil(result)
+                }  
+            });
         }
     }
 }
