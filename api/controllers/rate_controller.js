@@ -7,7 +7,12 @@ const RateModel = require('../models/rates');
 //  * Float money_amount: Amount of money A
 convert = async function (req, res) {
     if (!req.query.from_currency || !req.query.to_currency || !req.query.money_amount){
-        return res.status(400).send('Please send all the values');
+        return res.status(400).send({
+            msg: 'Please send all the values',
+            data: {
+                result: false
+            }
+        });
     }
 
     // Some definitions
@@ -16,7 +21,6 @@ convert = async function (req, res) {
     var amount = req.query.money_amount;
     var in_eur = 0;
     var result = 0;
-    var resultRate = 0;
 
     // Get all the currency rates from the latest save in the DB
     var latest = await RateModel.findOne({}, {}, { sort: { '_id': -1 } }).exec();
@@ -24,10 +28,20 @@ convert = async function (req, res) {
     // Check if the from and to currency exist in the database
     if (!(from in latest.rates)) {
         // from check
-        res.status(400).send(`The currency ${from} doesn't exist in the database`);
+        res.status(400).send({
+            msg: `The currency ${from} doesn't exist in the database`,
+            data: {
+                result: false
+            }
+        });
     } else if (!(to in latest.rates)) {
         // to check
-        res.status(400).send(`The currency ${to} doesn't exist in the database`);
+        res.status(400).send({
+            msg: `The currency ${to} doesn't exist in the database`,
+            data: {
+                result: false
+            }
+        });
     } else {
         // Since the rates stored in the DB are in base of EUR
         // we need first to convert from the currency to EUR 
@@ -45,18 +59,18 @@ convert = async function (req, res) {
         if (to === 'EUR') {
             result = in_eur;
             res.status(200).send({
-                msg: `The amount ${amount} from ${from} to ${to} is: ${Math.ceil(result)}`,
+                msg: `The amount ${amount} from ${from} to ${to} is: ${result}`,
                 data: {
-                    result: Math.ceil(result),
+                    result: result,
                     rate: amount/result
                 }
             });
         } else {
             result = (in_eur * latest.rates[to]);
             res.status(200).send({
-                msg: `The amount ${amount} from ${from} to ${to} is: ${Math.ceil(result)}`,
+                msg: `The amount ${amount} from ${from} to ${to} is: ${result}`,
                 data: {
-                    result: Math.ceil(result),
+                    result: result,
                     rate: amount / result
                 }  
             });
