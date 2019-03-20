@@ -16,6 +16,7 @@ convert = async function (req, res) {
     var amount = req.query.money_amount;
     var in_eur = 0;
     var result = 0;
+    var resultRate = 0;
 
     // Get all the currency rates from the latest save in the DB
     var latest = await RateModel.findOne({}, {}, { sort: { '_id': -1 } }).exec();
@@ -46,7 +47,8 @@ convert = async function (req, res) {
             res.status(200).send({
                 msg: `The amount ${amount} from ${from} to ${to} is: ${Math.ceil(result)}`,
                 data: {
-                    result: Math.ceil(result)
+                    result: Math.ceil(result),
+                    rate: amount/result
                 }
             });
         } else {
@@ -54,7 +56,8 @@ convert = async function (req, res) {
             res.status(200).send({
                 msg: `The amount ${amount} from ${from} to ${to} is: ${Math.ceil(result)}`,
                 data: {
-                    result: Math.ceil(result)
+                    result: Math.ceil(result),
+                    rate: amount / result
                 }  
             });
         }
